@@ -1,13 +1,12 @@
 #X728 RTC setting up
 sudo sed -i '$ i rtc-ds1307' /etc/modules
+sudo sed -i '$ i #x728 RTC start' /etc/rc.local
 sudo sed -i '$ i echo ds1307 0x68 > /sys/class/i2c-adapter/i2c-1/new_device' /etc/rc.local
 sudo sed -i '$ i hwclock -s' /etc/rc.local
 sudo sed -i '$ i #x728 Start power management on boot' /etc/rc.local
 
 #x728 Powering on /reboot /full shutdown through hardware
 #!/bin/bash
-
-#sudo sed -e '/shutdown/ s/^#*/#/' -i /etc/rc.local
 
 echo '#!/bin/bash
 
@@ -44,9 +43,9 @@ while [ 1 ]; do
       exit
     fi
   fi
-done' > /etc/x728pwr.sh
-sudo chmod +x /etc/x728pwr.sh
-sudo sed -i '$ i /etc/x728pwr.sh &' /etc/rc.local
+done' > /usr/local/sbin/x728pwr.sh
+sudo chmod +x /usr/local/sbin/x728pwr.sh
+sudo sed -i '$ i /usr/local/sbin/x728pwr.sh &' /etc/rc.local
 
 #X728 full shutdown through Software
 #!/bin/bash
@@ -75,7 +74,7 @@ echo "X728 Shutting down..."
 echo "0" > /sys/class/gpio/gpio$BUTTON/value
 ' > /usr/local/bin/x728softsd.sh
 sudo chmod +x /usr/local/bin/x728softsd.sh
-sudo echo "alias x728off='sudo x728softsd.sh'" >> /home/iu1jvo/.bashrc
+#sudo echo "alias x728off='sudo x728softsd.sh'" >> /home/iu1jvo/.bashrc
 
 #X728 Battery voltage & precentage reading
 #!/bin/bash
